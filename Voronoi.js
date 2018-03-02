@@ -26,7 +26,7 @@
  */
 
 
-let number = 1000;
+let number = 5;
 let width = window.innerWidth;
 let height = window.innerHeight;
 let sites = [];
@@ -43,48 +43,81 @@ canvas.height = height;
 generateVoronoi(number,width,height);
 drawVoronoi();
 
-function generateVoronoi(number,width,height)
-{
-  for(let i = 0; i < number; i++) /* populate the event queue with sites */
-  {
-    queue.insert({point:{x:Math.random()*width,y:Math.random()*height},
-            isSiteEvent:true,
-                   node:null});    
-  }
+function generateVoronoi(number,width,height){
+
+  // for(let i = 0; i < number; i++){
+  //   queue.insert({
+  //     point:{x:Math.random()*width,y:Math.random()*height},
+  //     isSiteEvent:true,
+  //     node:null
+  //   });   
+  // }
+
+  const pointsArr = [
+    [0,0],
+    [width,height],
+    [width,0],
+    [0,height - 1],
+    // [200,200],
+    // [23,70],
+    // [300,500],
+    [60,230],
+
+    [371, 172],
+    [371, 272],
+    [371, 372],
+    [371, 550]
+
+  ];
+
+  pointsArr.forEach(function(n){
+    console.log(n);
+    queue.insert({
+      point: {
+        x: n[0],
+        y: n[1]
+      },
+      isSiteEvent: true,
+      node:null
+    });
+
+  });
+
+
   
   beachline = new Node(queue.max().point,0); /* beachline will store a reference to the first node on the line each subsequent node will be linked to the previous node */
   
-  while(queue.notEmpty()) /* cycle the event queue */
-  {
+  /* cycle the event queue */
+  while(queue.notEmpty()){
     let event = queue.max();
     sweepY = event.point.y;
-    if(event.isSiteEvent){addEvent(event);}
-    else{removeEvent(event);}
+    if(event.isSiteEvent){
+      addEvent(event);
+    }
+    else{
+      removeEvent(event);
+    }
   }
 }
 
-function drawVoronoi()
-{
+function drawVoronoi(){
   context.strokeStyle = "black";
   context.lineWidth = 1.0;
   
-  for(let j = 0; j < edges.length; j++)
-  {
+  for(let j = 0; j < edges.length; j++){
     drawLine(edges[j].start,edges[j].end);
   }
   
   context.strokeStyle = "red";
   context.lineWidth = 1.0;
   
-  for(let i = 0; i < sites.length; i++)
-  {
+  for(let i = 0; i < sites.length; i++){
     drawCircle(sites[i],1.2);
   }
   
     context.strokeStyle = "blue";
   
-  for(let i =0; i< edges.length; i++)
-  {
+  for(let i =0; i< edges.length; i++){
    // drawCircle(edges[i].start,1.2);
     drawCircle(edges[i].end,1.5);
   }
@@ -96,9 +129,9 @@ function drawVoronoi()
 
 function drawCircle(point,radius)
 {
-	context.beginPath();
-	context.arc(point.x, height-point.y, radius, 0, Math.PI*2);
-	context.stroke();
+  context.beginPath();
+  context.arc(point.x, height-point.y, radius, 0, Math.PI*2);
+  context.stroke();
 }
 
 /*
